@@ -3,16 +3,19 @@
   <head>
     <title>Add Map</title>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-
     <link rel="stylesheet" href="css/main.css">
   </head>
   <body>
-    <h3>My Google Maps Demo</h3>
     <div id="map"></div>
-    <form method="post">
+    <div class="side-bar">
+      <h3 class="side-bar__title">Places List</h3>
+    </div>
+    <button class="add-side-bar">+</button>
+    <form class="cor-form" method="post">
         <input type="text" id="lat" readonly="yes"><br>
         <input type="text" id="lng" readonly="yes">
     </form>
+
     <script
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDPwVTN8-25ewAKtZCKa5Bh8r9A_GsTaCw&callback=initMap&v=weekly"
       defer
