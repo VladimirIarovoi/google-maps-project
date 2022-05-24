@@ -11,9 +11,10 @@
       <h3 class="side-bar__title">Places List</h3>
     </div>
     <button class="add-side-bar">+</button>
+    <button class="export-btn">E</button>
     <form class="cor-form" method="post">
         <input type="text" id="lat" readonly="yes"><br>
-        <input type="text" id="lng" readonly="yes">
+        <input type="text" id="lng" readonly="yes" onclick="exportToExcel()">
     </form>
 
     <script
@@ -22,5 +23,9 @@
     ></script>
     <script type="module" src="js/main.js"></script>
     <script src="js/main.js"></script>
+<!--    <script src="xls-export.js"></script>-->
+<!--    <script async-->
+<!--            src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places&callback=initMap">-->
+<!--    </script>-->
   </body>
 </html>

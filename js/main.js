@@ -1,8 +1,12 @@
+
+
 let map;
 let marker = false;
 let geocoder;
 let response;
 const sideBar = document.querySelector('.side-bar');
+const exportButton = document.querySelector('.export-btn');
+
 
 const markerLocation = () => {
     const currentLocation = marker.getPosition();
@@ -15,10 +19,13 @@ const sideBarCreate = () => {
     addListButton.addEventListener('click', () => {
         if (addListButton.classList.contains('active')) {
             addListButton.classList.remove('active');
+            exportButton.classList.remove('active');
             sideBar.classList.remove('active');
         } else {
             sideBar.classList.add('active');
+            sideBar.classList.add('active');
             addListButton.classList.add('active');
+            exportButton.classList.add('active');
         }
     })
 }
@@ -35,14 +42,18 @@ const geocode = (request) => {
             newAddress.classList.add('side-bar__item')
             newAddress.append(results[0].formatted_address);
             response.append(newAddress);
-            console.log(result);
+            // console.log(result);
+
             return results;
+
         })
         .catch(function (e) {
             alert("Geocode was not successful for the following reason: " + e);
         });
 }
-        
+
+
+
 const initMap = ()  => {
 
     const centerOfMap = new google.maps.LatLng(52.357971, -6.516758);
@@ -60,6 +71,36 @@ const initMap = ()  => {
     response.innerText = "";
 
 
+
+
+    exportButton.addEventListener('click', item =>{
+        console.log(response.childNodes)
+        let exp = []
+        response.childNodes.forEach(item => {
+            // console.log(item.innerText);
+            exp.push(item)
+            })
+        // console.log(exp);
+
+
+        let CsvString = "";
+
+            exp.forEach(function(ColItem) {
+                CsvString += ColItem.innerText + ",";
+
+            CsvString += "\r\n";
+        });
+        CsvString = "data:application/csv," + encodeURIComponent(CsvString);
+        let x = document.createElement("A");
+        x.setAttribute("href", CsvString);
+        x.setAttribute("download", "data.csv");
+        document.body.appendChild(x);
+        x.click();
+
+
+
+
+    })
     google.maps.event.addListener(map, 'click', (event) => {
         const clickedLocation = event.latLng;
         geocode({ location: clickedLocation }); 
@@ -78,9 +119,12 @@ const initMap = ()  => {
         }
         markerLocation();
         sideBar.append(response);
+
     });
-    
+
     sideBarCreate();
 }
 
+
 window.initMap = initMap();
+
