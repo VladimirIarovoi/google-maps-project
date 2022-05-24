@@ -46,9 +46,30 @@
     z-index: 101;
     cursor: pointer;
 }
+
+.export-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 190px;
+    left: 10px;
+    height: 60px;
+    width: 60px;
+    border: 1px solid #000;
+    border-radius: 50%;
+    font-size: 50px;
+    transition: all 0.6s;
+    z-index: 101;
+    cursor: pointer;
+}
 .add-side-bar.active {
     left: 510px;
     transform: rotate(135deg);
+}
+.export-btn.active {
+    left: 510px;
+    /*transform: rotate(135deg);*/
 }
 
 .side-bar__title {
@@ -57,7 +78,7 @@
 }
 
 #response {
-    height: 95%;
+    /*height: 95%;*/
     list-style: none;
     overflow: auto;
 }
