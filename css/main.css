@@ -78,7 +78,7 @@
 }
 
 #response {
-    /*height: 95%;*/
+    height: 95%;
     list-style: none;
     overflow: auto;
 }

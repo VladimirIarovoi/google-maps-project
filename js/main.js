@@ -1,9 +1,8 @@
-
-
 let map;
 let marker = false;
 let geocoder;
 let response;
+let drawingManager;
 const sideBar = document.querySelector('.side-bar');
 const exportButton = document.querySelector('.export-btn');
 
@@ -52,6 +51,30 @@ const geocode = (request) => {
         });
 }
 
+const exportToExcel = (response) => {
+    exportButton.addEventListener('click', item => {
+        console.log(response.childNodes)
+        let exp = []
+        response.childNodes.forEach(item => {
+            exp.push(item)
+        })
+
+
+        let CsvString = "";
+
+        exp.forEach(function (ColItem) {
+            CsvString += ColItem.innerText + ",";
+
+            CsvString += "\r\n";
+        });
+        CsvString = "data:application/csv," + encodeURIComponent(CsvString);
+        let x = document.createElement("A");
+        x.setAttribute("href", CsvString);
+        x.setAttribute("download", "data.csv");
+        document.body.appendChild(x);
+        x.click();
+    })
+}
 
 
 const initMap = ()  => {
@@ -64,43 +87,38 @@ const initMap = ()  => {
     };
 
     map = new google.maps.Map(document.querySelector('#map'), options);
+
     geocoder = new google.maps.Geocoder();
+
+    drawingManager = new google.maps.drawing.DrawingManager({
+        //drawingMode: google.maps.drawing.OverlayType.MARKER,
+        drawingControl: true,
+        drawingControlOptions: {
+            position: google.maps.ControlPosition.TOP_CENTER,
+            drawingModes: [
+                google.maps.drawing.OverlayType.POLYGON,
+            ],
+        },
+        markerOptions: {
+            icon: "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png",
+        },
+        circleOptions: {
+            fillColor: "#ffff00",
+            fillOpacity: 1,
+            strokeWeight: 5,
+            clickable: false,
+            editable: true,
+            zIndex: 1,
+        },
+    });
+    drawingManager.setMap(map);
 
     response = document.createElement('p')
     response.id = "response";
     response.innerText = "";
 
+    exportToExcel(response)
 
-
-
-    exportButton.addEventListener('click', item =>{
-        console.log(response.childNodes)
-        let exp = []
-        response.childNodes.forEach(item => {
-            // console.log(item.innerText);
-            exp.push(item)
-            })
-        // console.log(exp);
-
-
-        let CsvString = "";
-
-            exp.forEach(function(ColItem) {
-                CsvString += ColItem.innerText + ",";
-
-            CsvString += "\r\n";
-        });
-        CsvString = "data:application/csv," + encodeURIComponent(CsvString);
-        let x = document.createElement("A");
-        x.setAttribute("href", CsvString);
-        x.setAttribute("download", "data.csv");
-        document.body.appendChild(x);
-        x.click();
-
-
-
-
-    })
     google.maps.event.addListener(map, 'click', (event) => {
         const clickedLocation = event.latLng;
         geocode({ location: clickedLocation }); 
@@ -127,4 +145,3 @@ const initMap = ()  => {
 
 
 window.initMap = initMap();
-
