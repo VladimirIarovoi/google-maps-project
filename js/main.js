@@ -3,9 +3,14 @@ let marker = false;
 let geocoder;
 let response;
 let drawingManager;
+let polygonsCoords = [];
 const sideBar = document.querySelector('.side-bar');
 const exportButton = document.querySelector('.export-btn');
 
+const removeLine = () => {
+    const lastOverlay = polygonsCoords.pop();
+    if (lastOverlay) lastOverlay.setMap(null);
+}
 
 const markerLocation = () => {
     const currentLocation = marker.getPosition();
@@ -41,7 +46,6 @@ const geocode = (request) => {
             newAddress.classList.add('side-bar__item')
             newAddress.append(results[0].formatted_address);
             response.append(newAddress);
-            // console.log(result);
 
             return results;
 
@@ -141,6 +145,14 @@ const initMap = ()  => {
     });
 
     sideBarCreate();
+
+    google.maps.event.addListener(drawingManager, 'overlaycomplete', function(event) {
+        polygonsCoords.push(event.overlay);
+        console.log(polygonsCoords);
+    });
+
+    const undo = document.querySelector('#undo');
+    undo.addEventListener("click",removeLine);
 }
 
 
