@@ -6,6 +6,7 @@ let drawingManager;
 let polygonsCoords = [];
 const sideBar = document.querySelector('.side-bar');
 const exportButton = document.querySelector('.export-btn');
+let polygonsCoordsPoint = 0;
 
 const removeLine = () => {
     const lastOverlay = polygonsCoords.pop();
@@ -121,11 +122,12 @@ const initMap = ()  => {
     response.id = "response";
     response.innerText = "";
 
+    console.log(response)
     exportToExcel(response)
 
     google.maps.event.addListener(map, 'click', (event) => {
         const clickedLocation = event.latLng;
-        geocode({ location: clickedLocation }); 
+        geocode({ location: clickedLocation });
         if(!marker){
             marker = new google.maps.Marker({
                 position: clickedLocation,
@@ -148,8 +150,35 @@ const initMap = ()  => {
 
     google.maps.event.addListener(drawingManager, 'overlaycomplete', function(event) {
         polygonsCoords.push(event.overlay);
-        console.log(polygonsCoords);
+        console.log(event.overlay.getPath().getArray());
+        const polygonPositions = event.overlay.getPath().getArray()
+        polygonPositions.forEach(item => {
+
+            console.log(item.lat)
+            var latlng = new google.maps.LatLng(item);
+            // This is making the Geocode request
+            geocoder.geocode({ 'latLng': latlng },  (results, status) =>{
+                if (status !== google.maps.GeocoderStatus.OK) {
+                    alert(status);
+                }
+                if (status == google.maps.GeocoderStatus.OK) {
+                    let address = (results[0].formatted_address);
+                    console.log(address)
+                    // response.append(address);
+                    // sideBar.append(response);
+
+                    let newAddress = document.createElement('li')
+                    newAddress.classList.add('side-bar__item')
+                    newAddress.append(address);
+                    response.append(newAddress);
+                    sideBar.append(response)
+                }
+            });
+
+        })
+
     });
+
 
     const undo = document.querySelector('#undo');
     undo.addEventListener("click",removeLine);
